@@ -89,7 +89,7 @@ End Property
 Public Function GetEnum() As IUnknown
 Attribute GetEnum.VB_UserMemId = -4
     ' Prozedur-Id = -4
-    Set GetEnum = New_Enum(m_EnumV, m_Array, m_vType, m_Count)
+    Set GetEnum = New_Enum(m_EnumV, Me, m_Array, m_vType, m_Count)
 End Function
 
 Public Property Get Item(Index As Long) As Variant

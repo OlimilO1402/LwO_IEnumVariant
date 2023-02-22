@@ -140,12 +140,13 @@ Private Sub CmdWalkListForI_Click()
     dt = Timer - dt
     Label1 = Format(dt, "0.000")
 End Sub
+
 Private Sub CmdWalkListForEach_Click()
     'walk the list with "For Each"
     Dim dt As Double: dt = Timer
     Dim d As Double
     Dim v
-    For Each v In myList
+    For Each v In myList '.GetEnum
         d = v
     Next
     dt = Timer - dt
@@ -163,6 +164,7 @@ Private Sub CmdWalkArrayAsDoubleForI_Click()
     dt = Timer - dt
     Label3 = Format(dt, "0.000")
 End Sub
+
 Private Sub CmdWalkArrayAsDoubleForEach_Click()
     'walk an Array() As Double with "For Each"
     Dim dt As Double: dt = Timer
@@ -188,6 +190,7 @@ Private Sub CmdWalkRefArrayForI_Click()
     Label5 = Format(dt, "0.000")
     ZeroSAPtr ArrPtr(dArr)
 End Sub
+
 Private Sub CmdWalkRefArrayForEach_Click()
     'walk an instance of Array() As Double with "For Each"
     Dim dArr() As Double: SAPtr(ArrPtr(dArr)) = myList.SAPtr

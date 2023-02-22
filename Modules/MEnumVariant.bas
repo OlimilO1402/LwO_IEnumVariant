@@ -9,9 +9,12 @@ Private Type VBGuid
     Data5(0 To 7) As Byte
 End Type
 
+Private Const IID_IEnumVariant32 As String = "{00020404-0000-0000-C000-000000000046}"
+Private Const IID_IEnumVariant64 As String = "{00020400-0000-0000-C000-000000000046}"
+
 'Eine VTable enthält Zeiger auf die Funktionen einer Klasse
 Private Type TEnumVariantVTable
-    VTable(0 To 6) As Long
+    VTable(0 To 6) As LongPtr
 End Type
 
 'Unterscheidung in Objekte und einfache Datentypen durch zwei verschiedene Next-Funktionen
@@ -26,13 +29,15 @@ Private m_pVTableVar As Long
 '
 Public Type TEnumVariant
     pVTable As Long      'erstes Element in einem Objekt ist immer ein Zeigr auf die VTable
+    Owner   As Object
     refCnt  As Long      'der Referenzzähler
     Array   As Variant   'der Variant enthält einen Zeiger auf ein Array beliebigen Typs
     Count   As Long      'die Anzahl der abzulaufenden Elemente im Array
     Index   As Long      'der Indexzähler, Index auf das nächste Element
 End Type
-Private Const S_OK = &H0&
-Private Const S_FALSE = &H1&
+
+Private Const S_OK    As Long = &H0&
+Private Const S_FALSE As Long = &H1&
 
 Public Sub InitEnumVariantVTable()
     'Initialisierung der Funktionszeiger der IEnumVariant Lightweight Klasse
@@ -60,25 +65,26 @@ End Sub
 'End Function
 
 Public Function New_Enum(Me_ As TEnumVariant, _
+                         Owner As Object, _
                          Arr As Variant, _
                          ByVal vt As VbVarType, _
                          ByVal Count As Long) As IUnknown
     With Me_
         'man könnte auch für jeden Datentyp eine eigene Next-Prozedur verwenden
         .pVTable = IIf(vt = vbObject, m_pVTableObj, m_pVTableVar)
-        
+        Set .Owner = Owner
         'Den Zeiger auf das Array komplett aus dem Variant in den Variant kopieren
-        RtlMoveMemory .Array, Arr, 16
+        RtlMoveMemory .Array, Arr, MPtr.SizeOf_Variant
         .Count = Count
         .Index = 0
-        .refCnt = 2
+        .refCnt = 4
     End With
     
     'das Objekt zum Leben erwecken
-    RtlMoveMemory New_Enum, VarPtr(Me_), 4
+    RtlMoveMemory New_Enum, VarPtr(Me_), SizeOf_LongPtr
 End Function
 
-Private Function FncQueryInterface(Me_ As TEnumVariant, riid As VBGuid, pvObj As Long) As Long
+Private Function FncQueryInterface(Me_ As TEnumVariant, riid As VBGuid, pvObj As LongPtr) As Long
     
     ' Hier frägt VB das Objekt, ob es sich "wirklich" um ein IEnumVariant-Objekt handelt.
     ' Man braucht diese Abfrage eigentlich nicht, da wir ja wissen welches Objekt es ist.
@@ -113,7 +119,7 @@ Private Function SubRelease(Me_ As TEnumVariant) As Long
     ' dann den Zeiger auf das Array im Variant Array wieder löschen
     With Me_
         .refCnt = .refCnt - 1
-        If .refCnt = 0 Then RtlZeroMemory .Array, 16
+        If .refCnt = 0 Then RtlZeroMemory .Array, MPtr.SizeOf_Variant
     End With
 End Function
 
