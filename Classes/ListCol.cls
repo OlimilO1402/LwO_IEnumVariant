@@ -53,7 +53,7 @@ End Property
 
 Public Function GetIEnumVariant() As IUnknown
 Attribute GetIEnumVariant.VB_UserMemId = -4
-'Attribute GetEnum.VB_UserMemId = -4
+'Attribute GetIEnumVariant.VB_UserMemId = -4
     ' Prozedur-Id = -4
     Set GetIEnumVariant = m_Collection.[_NewEnum]
 End Function

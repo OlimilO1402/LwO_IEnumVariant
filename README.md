@@ -7,6 +7,7 @@
 [![Follow](https://img.shields.io/github/followers/OlimilO1402.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/OlimilO1402/LwO_IEnumVariant/watchers)
 
 Project started around mid 2012.  
-This example shows how to implement the IEnumVariant-Interface for supporting the "for each"-language-feature in your own list class, by using a lightweight-object. The contained list-class is just an example of a prototype of a list.  
+This example shows how to implement the IEnumVariant-Interface for supporting the "for each"-language-feature in your own list class, by using a lightweight-object.  
+The contained list-class is just an example of a prototype of a list.  
 
-![IEnumVarImpl Image](Resources/IEnumVarImpl.png "IEnumVarImpl Image")
+![IEnumVarImpl Image](Resources/IEnumVarImpl2.png "IEnumVarImpl Image")
